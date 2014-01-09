@@ -40,6 +40,8 @@ Options:
 
 ### Example
 
+Let's run a benchmark that creates 3 producers and consumers, each with their own connection:
+
 ```
 $ java -jar target/rabbit-bench.jar -uri amqp://user:pass@10.10.10.10:5672 -p 3 -c 3 -tl 5000
 Creating connection
@@ -64,6 +66,18 @@ Time: 4.784s, Sent: 1930.07 msg/s, Received: 1963.04 msg/s, Min/Avg/Max latency:
 Time: 5.785s, Sent: 1758.24 msg/s, Received: 1324.68 msg/s, Min/Avg/Max latency: 1209/2372/4751 ms
 
 Avg Send Rate: 2165.66 msg/s, Avg Receive Rate: 1455.81 msg/s, Avg latency: 1534 ms
+```
+
+Another run with 10 producers and consumers, each with their own channel shared across 3 consumer and producer connections:
+
+```
+$ java -jar target/rabbit-bench.jar -uri amqp://user:pass@10.10.10.10:5672 -p 10 -c 10 -pc 3 -cc 3 -tl 5000
+```
+
+Another run with 10 producers and consumers, each sharing a single channel across 3 consumer and producer connections:
+
+```
+$ java -jar target/rabbit-bench.jar -uri amqp://user:pass@10.10.10.10:5672 -p 10 -c 10 -pc 3 -cc 3 --no-channel-per-producer --no-channel-per-consumer -tl 5000
 ```
 
 ## License
