@@ -8,9 +8,11 @@
   (difference (set key-set) (set (keys m))))
 
 (defn assoc-if-absent
-  "Associates a value with a key if no value is currently present for that key"
+  "Associates a value with a key if no value is currently present for that key, returning the map"
   [m k v]
-  (if (not (m k)) (assoc m k v)))
+  (if (not (m k))
+    (assoc m k v)
+    m))
 
 (defn assert-true 
   "Asserts that p is true, else throws IllegalArgumentException with the msg"
