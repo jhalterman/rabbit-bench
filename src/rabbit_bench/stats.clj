@@ -42,21 +42,21 @@
         (swap! interval-latency-sum + latency))
 
       (create-sample [this]
-        (let [now (System/currentTimeMillis)
-              total-elapsed (- now start-time)
-              interval-elapsed (- now @last-stats-time)
-              send-rate (/ @interval-send-count interval-elapsed)
-              receive-rate (/ @interval-receive-count interval-elapsed)
-              avg-latency (/ @interval-latency-sum @interval-receive-count)]
-          (when (not= 0 @interval-receive-count)
+        (when (not= 0 @interval-receive-count)
+          (let [now (System/currentTimeMillis)
+                total-elapsed (- now start-time)
+                interval-elapsed (- now @last-stats-time)
+                send-rate (/ @interval-send-count interval-elapsed)
+                receive-rate (/ @interval-receive-count interval-elapsed)
+                avg-latency (/ @interval-latency-sum @interval-receive-count)]
             (println (format "Time: %.3fs, Sent: %1.2f msg/s, Received: %1.2f msg/s, Min/Avg/Max latency: %d/%d/%d ms"
                              (millis->secs total-elapsed)
                              (* send-rate 1000.0)
                              (* receive-rate 1000.0)
                              (long (nanos->ms @min-latency))
                              (long (nanos->ms avg-latency))
-                             (long (nanos->ms @max-latency)))))
-          (reset! last-stats-time now))
+                             (long (nanos->ms @max-latency))))
+            (reset! last-stats-time now)))
         (reset! interval-send-count 0)
         (reset! interval-receive-count 0)
         (reset! min-latency Long/MAX_VALUE)
