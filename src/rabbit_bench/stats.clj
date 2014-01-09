@@ -46,14 +46,15 @@
               total-elapsed (- now start-time)
               interval-elapsed (- now @last-stats-time)
               send-rate (/ @interval-send-count interval-elapsed)
-              receive-rate (/ @interval-receive-count interval-elapsed)]
+              receive-rate (/ @interval-receive-count interval-elapsed)
+              avg-latency (/ @interval-latency-sum @interval-receive-count)]
           (when (not= 0 @interval-receive-count)
             (println (format "Time: %.3fs, Sent: %1.2f msg/s, Received: %1.2f msg/s, Min/Avg/Max latency: %d/%d/%d ms"
                              (millis->secs total-elapsed)
                              (* send-rate 1000.0)
                              (* receive-rate 1000.0)
                              (long (nanos->ms @min-latency))
-                             (long (nanos->ms (/ @interval-latency-sum @interval-receive-count)))
+                             (long (nanos->ms avg-latency))
                              (long (nanos->ms @max-latency)))))
           (reset! last-stats-time now))
         (reset! interval-send-count 0)
@@ -67,8 +68,9 @@
               send-elapsed (- now @send-start-time)
               receive-elapsed (- now @receive-start-time)
               send-rate (/ @total-send-count send-elapsed)
-              receive-rate (/ @total-receive-count receive-elapsed)]
+              receive-rate (/ @total-receive-count receive-elapsed)
+              latency (/ @total-latency-sum @total-receive-count)]
           (println (format "\nAvg Send Rate: %1.2f msg/s, Avg Receive Rate: %1.2f msg/s, Avg latency: %d ms"
                            (* send-rate 1000.0)
                            (* receive-rate 1000.0)
-                           (long (nanos->ms (/ @total-latency-sum @total-receive-count))))))))))
+                           (long (nanos->ms latency)))))))))
