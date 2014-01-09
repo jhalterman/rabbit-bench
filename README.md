@@ -1,10 +1,10 @@
 #rabbit-bench
 
-A tool for benchmarking various RabbitMQ configurations.
+A tool for benchmarking various RabbitMQ configurations. Currently measures latency and throughput to a single queue bound to a single exchange using a variable number of producer and consumer connections and channels.
 
 ## Setup
 
-Clone the repo and compile via Leiningen:
+Clone the repo and compile via [Leiningen](http://leiningen.org/):
 
 ```
 lein uberjar
@@ -36,6 +36,34 @@ Options:
 -cpp, --no-channel-per-producer, --channel-per-producer
 -cpc, --no-channel-per-consumer, --channel-per-consumer
 
+```
+
+### Example
+
+```
+$ java -jar target/rabbit-bench.jar -uri amqp://user:pass@10.10.10.10:5672 -p 3 -c 3 -tl 5000
+Creating connection
+Creating connection
+Creating connection
+Creating connection
+Creating connection
+Creating connection
+Creating connection
+Creating consumer
+Creating consumer
+Creating consumer
+Creating publisher
+Creating publisher
+Creating publisher
+
+Time: 0.774s, Sent: 2363.05 msg/s, Received: 103.36 msg/s, Min/Avg/Max latency: 32/77/94 ms
+Time: 1.781s, Sent: 3802.38 msg/s, Received: 1693.15 msg/s, Min/Avg/Max latency: 56/479/998 ms
+Time: 2.782s, Sent: 1794.21 msg/s, Received: 1910.09 msg/s, Min/Avg/Max latency: 937/1400/1952 ms
+Time: 3.783s, Sent: 1878.12 msg/s, Received: 1873.13 msg/s, Min/Avg/Max latency: 1081/1800/2905 ms
+Time: 4.784s, Sent: 1930.07 msg/s, Received: 1963.04 msg/s, Min/Avg/Max latency: 1255/1820/3600 ms
+Time: 5.785s, Sent: 1758.24 msg/s, Received: 1324.68 msg/s, Min/Avg/Max latency: 1209/2372/4751 ms
+
+Avg Send Rate: 2165.66 msg/s, Avg Receive Rate: 1455.81 msg/s, Avg latency: 1534 ms
 ```
 
 ## License
