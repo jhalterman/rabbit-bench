@@ -22,14 +22,16 @@
 (defn- is-within-limits
   "Returns true of the time-elapsed and msg-count are within the time-limit and msg-limit"
   [time-limit msg-limit time-elapsed msg-count]
-  (and (or (= time-limit 0) (< time-elapsed time-limit))
-       (or (= msg-limit 0) (< msg-count msg-limit))))
+  (and (or (= time-limit 0)
+           (< time-elapsed time-limit))
+       (or (= msg-limit 0)
+           (< msg-count msg-limit))))
 
 (defn- create-producer
   "Creates a producer that sends messages until the time-limit or msg-limit are exceeded,
   pausing throughout according to the rate-limit"
   [channel exchange routing-key msg-limit time-limit rate-limit stats]
-  (println "Creating publisher")
+  (println "Creating producer")
   (let [start-time (System/currentTimeMillis)]
     (loop [msg-count 0
            now start-time]
@@ -79,13 +81,13 @@
         connections (create-connections (+ producer-cxn-count consumer-cxn-count) uri)
         producer-cxns (take producer-cxn-count connections)
         consumer-cxns (take-last consumer-cxn-count connections)
-        producer-channels (create-channels (if (:channel-per-producer args)
-                                             producer-count
-                                             producer-cxn-count)
+        producer-channels (create-channels (if (:channel-per-producer-cxn args)
+                                             producer-cxn-count
+                                             producer-count)
                                            producer-cxns)
-        consumer-channels (create-channels (if (:channel-per-consumer args)
-                                             consumer-count
-                                             consumer-cxn-count)
+        consumer-channels (create-channels (if (:channel-per-consumer-cxn args)
+                                             consumer-cxn-count
+                                             consumer-count)
                                            consumer-cxns)
         stats (create-stats)
         producers (map #(partial create-producer % exchange routing-key producer-msg-limit time-limit rate-limit stats)

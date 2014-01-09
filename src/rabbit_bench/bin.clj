@@ -24,8 +24,8 @@
        ["-c" "--consumer-count" "Consumer count" :parse-fn parse-int]
        ["-pc" "--producer-cxn-count" "Producer connection count" :parse-fn parse-int]
        ["-cc" "--consumer-cxn-count" "Consumer connection count" :parse-fn parse-int]
-       ["-cpp" "--channel-per-producer" "Creates a channel per producer as opposed to a channel per producer connection" :flag true]
-       ["-cpc" "--channel-per-consumer" "Creates a channel per consumer as opposed to a channel per consumer connection" :flag true]))
+       ["-cppc" "--channel-per-producer-cxn" "Creates a single channel per producer connection instead of a channel per producer (default)" :flag true]
+       ["-cpcc" "--channel-per-consumer-cxn" "Creates a single channel per consumer connection instead of a channel per consumer (default)" :flag true]))
 
 (defn -main [& args]
   (let [[opts args usage] (parse-args args)
@@ -43,6 +43,7 @@
                      "Producer connection count cannot be greater than the producer count")
         (assert-true (<= (:consumer-cxn-count opts) (:consumer-count opts))
                      "Consumer connection count cannot be greater than the consumer count")
-        (assert-true (and (not= (:time-limit args) 0) (not= (:message-limit args) 0))
+        (assert-true (and (not= (:time-limit args) 0)
+                          (not= (:message-limit args) 0))
                      "Must specify a time limit or message limit")
         (core/run opts)))))

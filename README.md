@@ -33,8 +33,8 @@ Options:
 -c, --consumer-count                                   
 -pc, --producer-cxn-count                              
 -cc, --consumer-cxn-count                              
--cpp, --no-channel-per-producer, --channel-per-producer
--cpc, --no-channel-per-consumer, --channel-per-consumer
+-cppc, --channel-per-producer-cxn
+-cpcc, --channel-per-consumer-cxn
 
 ```
 
@@ -77,7 +77,7 @@ $ java -jar target/rabbit-bench.jar -uri amqp://user:pass@10.10.10.10:5672 -p 10
 Another run with 10 producers and consumers, each sharing a single channel across 3 consumer and producer connections:
 
 ```
-$ java -jar target/rabbit-bench.jar -uri amqp://user:pass@10.10.10.10:5672 -p 10 -c 10 -pc 3 -cc 3 --no-channel-per-producer --no-channel-per-consumer -tl 5000
+$ java -jar target/rabbit-bench.jar -uri amqp://user:pass@10.10.10.10:5672 -p 10 -c 10 -pc 3 -cc 3 -cppc -cpcc -tl 5000
 ```
 
 ## License
